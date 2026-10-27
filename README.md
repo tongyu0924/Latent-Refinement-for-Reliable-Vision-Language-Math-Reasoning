@@ -70,31 +70,22 @@ $$\mathcal{L} = \underbrace{-\log p(y^{\star}\mid x, s_d) + \beta\,\mathrm{KL}}_
 - Backbone: Qwen2-VL-2B-Instruct (frozen, bf16).
 - Data: MathVista *testmini*, split 80/20 with seed 42 (800 training / 200 validation problems).
 - Maximum refinement depth: $d_{\max}=3$.
-- Decoding: greedy for both models.
+- All methods use the same backbone, validation split, prompt format and answer scorer.
 
-| Method | Overall Acc. | Answer log-p |
-|---|---|---|
-| Qwen2-VL-2B (base) | 48.00 | −1.177 |
-| **+ Latent Refinement (ours)** | **55.00** (+7.00) | **−0.346** |
+**Baselines:**
+- **CoT** ([Wei et al., 2022](https://arxiv.org/abs/2201.11903)): greedy chain-of-thought, up to 512 tokens.
+- **SC-CoT** ([Wang et al., 2023](https://arxiv.org/abs/2203.11171)): 5 sampled CoT paths (T = 0.7), majority vote.
+- **Self-Refine** ([Madaan et al., 2023](https://arxiv.org/abs/2303.17651)): starts from the CoT answer, then up to 2 rounds of self-feedback and refinement.
 
-**By category** (validation set, n = 200):
-
-| Category | n | Base | Ours |
+| Method | Reasoning | Acc. (%) | Rel. time |
 |---|---|---|---|
-| Figure question answering | 51 | 62.75 | **66.67** |
-| Geometry problem solving | 42 | 33.33 | **47.62** |
-| Math word problem | 40 | 45.00 | **57.50** |
-| Textbook question answering | 29 | 48.28 | **55.17** |
-| Visual question answering | 38 | **47.37** | 44.74 |
-| *Multiple choice* | 104 | 57.69 | **64.42** |
-| *Free form* | 96 | 37.50 | **44.79** |
+| Qwen2-VL-2B (zero-shot) | – | 48.00 | 1.00× |
+| CoT | Explicit | 46.50 | 30.68× |
+| SC-CoT | Explicit | 44.50 | 47.88× |
+| Self-Refine | Explicit | 47.00 | 34.84× |
+| **Ours** | Implicit | **55.00** | **1.88×** |
 
-The relative inference time is 1.88× the base model. The learned depth policy chose $d=3$ for every problem.
-
-**SFT-only ablation.** The SFT-only baseline trains the decode bridge with depth fixed to 0 and no RL. Its results are not reported yet. Run it with:
-```bash
-python train.py --ablation sft_only --output_dir ./outputs/sft_only
-```
+Relative time is measured against zero-shot greedy decoding.
 
 ---
 
@@ -106,7 +97,8 @@ python train.py --ablation sft_only --output_dir ./outputs/sft_only
 ├── dataset.py     # MathVista loading, prompting, answer extraction / scoring
 ├── trainer.py     # ReLAR: refinement, RL training loop, generation, evaluation
 ├── train.py       # training entry point
-└── inference.py   # evaluate a checkpoint or run a single image
+├── inference.py   # evaluate a checkpoint or run a single image
+└── baselines.py   # CoT / SC-CoT / Self-Refine baselines on the same split
 ```
 
 ## Usage
@@ -125,6 +117,11 @@ python train.py --use_lora true                   # LoRA on the LLM (needs more 
 **Evaluate a checkpoint** (re-uses the checkpoint's config, so the validation split matches training):
 ```bash
 python inference.py --ckpt ./relar_vlm_mathvista/final_model
+```
+
+**Explicit-reasoning baselines** (zero-shot, CoT, SC-CoT and Self-Refine on the same validation split):
+```bash
+python baselines.py --ckpt ./relar_vlm_mathvista/final_model
 ```
 
 **Single image:**
