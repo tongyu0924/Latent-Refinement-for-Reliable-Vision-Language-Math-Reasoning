@@ -1,0 +1,10 @@
+torch>=2.1
+transformers==4.51.3
+peft==0.15.2
+accelerate>=0.34
+datasets>=2.19
+qwen-vl-utils
+pillow
+numpy
+matplotlib
+tqdm
