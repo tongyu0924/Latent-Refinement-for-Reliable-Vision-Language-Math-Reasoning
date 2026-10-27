@@ -50,9 +50,9 @@ $$\tilde h = (1-\sigma(s_d))\odot h + \sigma(s_d)\odot \mathrm{proj}(s_d)$$
 
 At inference, $s_d$ is computed once from the prompt, and every generated token is decoded from $\tilde h$.
 
-**5. Reward.** Each step is rewarded by the gain in log-likelihood of the gold answer $y^*$, minus a per-step cost $c_d$:
+**5. Reward.** Each step is rewarded by the gain in log-likelihood of the gold answer $y^{\star}$, minus a per-step cost $c_d$:
 
-$$r_t = \Delta_t - c_d, \quad \Delta_t = \log p(y^*\mid x, s_{t+1}) - \log p(y^*\mid x, s_t)$$
+$$r_t = \Delta_t - c_d, \quad \Delta_t = \log p(y^{\star}\mid x, s_{t+1}) - \log p(y^{\star}\mid x, s_t)$$
 
 The shaped return adds a KL penalty to the original VLM and an entropy bonus:
 
@@ -60,7 +60,7 @@ $$R = \sum_{t=1}^{d}\Big[\tfrac{r_t}{t} + \tfrac{1}{d}\big(-\beta\,\mathrm{KL} +
 
 **6. Objective.** The training loss combines a language-modelling term, a REINFORCE term with a learned baseline $V(s_0)$, and a critic loss:
 
-$$\mathcal{L} = \underbrace{-\log p(y^*\mid x, s_d) + \beta\,\mathrm{KL}}_{\mathcal{L}_{\text{LM}}} \;+\; \alpha_{\text{RL}}\underbrace{\big[-(R - V(s_0))\log\pi(d, a_{1:d}) - \lambda_H\mathcal{H}\big]}_{\mathcal{L}_{\text{RL}}} \;+\; \alpha_V\,(V(s_0)-R)^2$$
+$$\mathcal{L} = \underbrace{-\log p(y^{\star}\mid x, s_d) + \beta\,\mathrm{KL}}_{\mathcal{L}_{\text{LM}}} \;+\; \alpha_{\text{RL}}\underbrace{\big[-(R - V(s_0))\log\pi(d, a_{1:d}) - \lambda_H\mathcal{H}\big]}_{\mathcal{L}_{\text{RL}}} \;+\; \alpha_V\,(V(s_0)-R)^2$$
 
 ---
 
