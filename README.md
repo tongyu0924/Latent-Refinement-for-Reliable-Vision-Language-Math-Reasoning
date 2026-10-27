@@ -117,7 +117,7 @@ pip install -r requirements.txt
 
 **Train** (also evaluates on the validation split when training finishes):
 ```bash
-python train.py                                   # defaults: Qwen2-VL-2B, 3 epochs
+python train.py                                   # defaults: Qwen2-VL-2B
 python train.py --epochs 5 --depth_cost 0.05      # any Config field can be overridden
 python train.py --use_lora true                   # LoRA on the LLM (needs more VRAM)
 ```
