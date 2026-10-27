@@ -69,7 +69,7 @@ $$\mathcal{L} = \underbrace{-\log p(y^{\star}\mid x, s_d) + \beta\,\mathrm{KL}}_
 **Setup:**
 - Backbone: Qwen2-VL-2B-Instruct (frozen, bf16).
 - Data: MathVista *testmini*, split 80/20 with seed 42 (800 training / 200 validation problems).
-- Training: 3 epochs, $d_{\max}=3$.
+- Maximum refinement depth: $d_{\max}=3$.
 - Decoding: greedy for both models.
 
 | Method | Overall Acc. | Answer log-p |
