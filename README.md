@@ -68,7 +68,7 @@ $$\mathcal{L} = \underbrace{-\log p(y^{\star}\mid x, s_d) + \beta\,\mathrm{KL}}_
 
 **Setup:**
 - Backbone: Qwen2-VL-2B-Instruct (frozen, bf16).
-- Data: MathVista *testmini*, split 80/20 with seed 42.
+- Data: MathVista *testmini*, with a fixed-seed training/validation split (80/20, seed 42).
 - Maximum refinement depth: $d_{\max}=3$.
 - All methods use the same backbone, validation split, prompt format and answer scorer.
 
@@ -89,7 +89,7 @@ Relative time is measured against zero-shot greedy decoding.
 
 ### Comparison with Published Vision-Language Models
 
-The following table provides **context from previously published MathVista results**, including models with explicit textual reasoning. The published scores are from the respective papers (generally on the full MathVista `testmini` benchmark); **our score is from the 200-example held-out validation subset described above**.
+The following table provides **context from previously published MathVista results**, including models with explicit textual reasoning. Published scores follow the evaluation settings in their respective papers; our score is reported from this project’s evaluation setup.
 
 | Model | Size | Reasoning | Acc. (%) | Source |
 |---|---|---|---:|---|
@@ -99,9 +99,9 @@ The following table provides **context from previously published MathVista resul
 | LLaVA-Reasoner-8B | 8B | Explicit | 50.6 | [Mulberry](https://arxiv.org/abs/2412.18319) |
 | Mulberry-2B | 2B | Explicit | 51.7 | [Mulberry](https://arxiv.org/abs/2412.18319) |
 | LLaVA-CoT-11B | 11B | Explicit | 54.8 | [LLaVA-CoT](https://arxiv.org/abs/2411.10440) |
-| **Ours (Qwen2-VL-2B backbone)** | **2B** | **Implicit** | **55.0** | This work |
+| **Ours (Qwen2-VL-2B backbone)** | **2B** | **Implicit** | **55.00** | This work |
 
-> **Evaluation caveat:** These are **not controlled, head-to-head scores**. Our 55.00% is measured on a held-out 200-example subset of MathVista `testmini`, whereas the cited paper scores refer to their own published evaluation settings (typically the full `testmini` set). Different splits, prompts, decoding procedures, answer extraction, and training data may affect accuracy. The table is intended as literature context, **not evidence of outperforming those models on the same benchmark protocol**. For controlled comparisons, use the within-project baseline table above.
+> **Evaluation caveat:** These are **not controlled, head-to-head scores**. Our 55.00% is reported under this project’s evaluation setup, whereas the cited paper scores refer to their own published evaluation settings. Different splits, prompts, decoding procedures, answer extraction, and training data may affect accuracy. The table is intended as literature context, **not evidence of outperforming those models on the same benchmark protocol**. For controlled comparisons, use the within-project baseline table above.
 
 ---
 
@@ -159,5 +159,4 @@ python inference.py --ckpt ./relar_vlm_mathvista/final_model \
 - Only the refinement modules are trained by default (~6M parameters). The VLM stays frozen and also serves as the KL reference model.
 - The state is built from the prompt positions only, so there is no answer leakage under teacher forcing.
 - Tiny images (side < 28 px) are upscaled automatically to satisfy the Qwen2-VL processor.
-- MathVista only releases answers for *testmini*, so both training and validation come from it. Reported numbers are on the 200 held-out problems and are not directly comparable to official MathVista leaderboard scores.
-
+- MathVista *testmini* is used for the training/validation split in this project. Reported scores should not be treated as directly comparable to official MathVista leaderboard results without verifying that the evaluation protocols match.
