@@ -99,7 +99,7 @@ The following table provides **context from previously published MathVista resul
 | LLaVA-Reasoner-8B | 8B | Explicit | 50.6 | [Mulberry](https://arxiv.org/abs/2412.18319) |
 | Mulberry-2B | 2B | Explicit | 51.7 | [Mulberry](https://arxiv.org/abs/2412.18319) |
 | LLaVA-CoT-11B | 11B | Explicit | 54.8 | [LLaVA-CoT](https://arxiv.org/abs/2411.10440) |
-| **Ours (Qwen2-VL-2B backbone)** | **2B** | **Implicit** | **55.00** | This work (200-example validation subset) |
+| **Ours (Qwen2-VL-2B backbone)** | **2B** | **Implicit** | **55.0** | This work |
 
 > **Evaluation caveat:** These are **not controlled, head-to-head scores**. Our 55.00% is measured on a held-out 200-example subset of MathVista `testmini`, whereas the cited paper scores refer to their own published evaluation settings (typically the full `testmini` set). Different splits, prompts, decoding procedures, answer extraction, and training data may affect accuracy. The table is intended as literature context, **not evidence of outperforming those models on the same benchmark protocol**. For controlled comparisons, use the within-project baseline table above.
 
