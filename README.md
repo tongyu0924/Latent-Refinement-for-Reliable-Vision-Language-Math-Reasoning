@@ -87,6 +87,22 @@ $$\mathcal{L} = \underbrace{-\log p(y^{\star}\mid x, s_d) + \beta\,\mathrm{KL}}_
 
 Relative time is measured against zero-shot greedy decoding.
 
+### Comparison with Published Vision-Language Models
+
+The following table provides **context from previously published MathVista results**, including models with explicit textual reasoning. The published scores are from the respective papers (generally on the full MathVista `testmini` benchmark); **our score is from the 200-example held-out validation subset described above**.
+
+| Model | Size | Reasoning | Acc. (%) | Source |
+|---|---|---|---:|---|
+| Qwen2-VL-2B-Instruct | 2B | – | 43.0 | [Qwen2-VL](https://arxiv.org/abs/2409.12191) |
+| Llama-3.2-11B-Vision-Instruct | 11B | – | 48.6 | [LLaVA-CoT](https://arxiv.org/abs/2411.10440) |
+| Insight-V-8B | 8B | Explicit | 49.8 | [Mulberry](https://arxiv.org/abs/2412.18319) |
+| LLaVA-Reasoner-8B | 8B | Explicit | 50.6 | [Mulberry](https://arxiv.org/abs/2412.18319) |
+| Mulberry-2B | 2B | Explicit | 51.7 | [Mulberry](https://arxiv.org/abs/2412.18319) |
+| LLaVA-CoT-11B | 11B | Explicit | 54.8 | [LLaVA-CoT](https://arxiv.org/abs/2411.10440) |
+| **Ours (Qwen2-VL-2B backbone)** | **2B** | **Implicit** | **55.00** | This work (200-example validation subset) |
+
+> **Evaluation caveat:** These are **not controlled, head-to-head scores**. Our 55.00% is measured on a held-out 200-example subset of MathVista `testmini`, whereas the cited paper scores refer to their own published evaluation settings (typically the full `testmini` set). Different splits, prompts, decoding procedures, answer extraction, and training data may affect accuracy. The table is intended as literature context, **not evidence of outperforming those models on the same benchmark protocol**. For controlled comparisons, use the within-project baseline table above.
+
 ---
 
 ## Project Structure
@@ -144,3 +160,4 @@ python inference.py --ckpt ./relar_vlm_mathvista/final_model \
 - The state is built from the prompt positions only, so there is no answer leakage under teacher forcing.
 - Tiny images (side < 28 px) are upscaled automatically to satisfy the Qwen2-VL processor.
 - MathVista only releases answers for *testmini*, so both training and validation come from it. Reported numbers are on the 200 held-out problems and are not directly comparable to official MathVista leaderboard scores.
+
